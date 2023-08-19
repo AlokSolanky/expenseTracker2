@@ -69,7 +69,7 @@ window.onload = () => {
     .addEventListener("click", async (e) => {
       const leaderBoard = document.getElementById("leaderboardArea");
       leaderBoard.style.display = "block";
-      console.log("working till here");
+      document.getElementById("premiumTrue").disabled = true;
       let response = await axios.get(
         "http://localhost:4000/premium/leaderBoard"
       );
