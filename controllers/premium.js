@@ -64,24 +64,10 @@ module.exports.updateStatus = async (req, res) => {
 module.exports.showLeaderBoard = async (req, res) => {
   try {
     const result = await User.findAll({
-      attributes: [
-        "name",
-        "email",
-        [
-          sequelize.fn("SUM", sequelize.col("expenses.amount")),
-          "total_expense_amount",
-        ],
-      ],
-      include: [
-        {
-          model: Expense,
-          attributes: [],
-        },
-      ],
-      group: ["users.id"],
-      order: [[sequelize.literal("total_expense_amount"), "DESC"]],
+      attributes: ["name", "totalExpense"],
+      order: [[sequelize.literal("totalExpense"), "DESC"]],
     });
-
+    console.log(result);
     res.json(result);
   } catch (error) {
     console.error("Error:", error);

@@ -34,16 +34,18 @@ module.exports.deleteExpense = async (req, res) => {
   {
     let amount;
     try {
-      let result = await Expense.findAll({ where: { id: req.params } });
-      console.log("RESULT IS --------", result);
+      let result = await Expense.findAll({
+        where: { id: req.params.expenseId },
+      });
+      amount = result[0].amount;
 
       let response = await Expense.destroy({
         where: { id: req.params.expenseId, userId: req.user.id },
       });
 
-      // amount = req.user.totalExpense - amount;
+      amount = req.user.totalExpense - amount;
 
-      // User.update({ totalExpense: amount }, { where: { id: req.user.id } });
+      User.update({ totalExpense: amount }, { where: { id: req.user.id } });
 
       res.status(200).json({ success: true });
     } catch (err) {

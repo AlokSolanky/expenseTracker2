@@ -74,7 +74,6 @@ window.onload = () => {
         "http://localhost:4000/premium/leaderBoard"
       );
       response.data.forEach((element) => {
-        console.log(element);
         const newLi = document.createElement("li");
         newLi.setAttribute("class", "list_item leaderBoardItems");
         // newLi.setAttribute("id", element.id);
@@ -82,7 +81,9 @@ window.onload = () => {
         let nameTextNode = document.createElement("div");
         nameTextNode.innerHTML = `Name : ${element.name}`;
         let amountTextNode = document.createElement("div");
-        amountTextNode.innerHTML = `Total : ${element.total_expense_amount}`;
+        amountTextNode.innerHTML = `Total : ${element.totalExpense}`;
+
+        console.log(element.totalExpense);
 
         newLi.appendChild(nameTextNode);
         newLi.appendChild(amountTextNode);

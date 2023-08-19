@@ -19,7 +19,7 @@ window.onload = () => {
       if (response.data.success) {
         localStorage.setItem("token", response.data.token);
         location.replace(
-          "F:/Sharpener/nodejs/Full%20Expense%20Tracker/backend/public/index.html"
+          "F:/Sharpener/nodejs/fullexpensetracker2/public/index.html"
         );
       }
     } catch (err) {
