@@ -18,6 +18,7 @@ module.exports.signUpUser = (req, res) => {
             name: req.body.name,
             email: req.body.email,
             password: hash,
+            totalExpense: 0,
           });
           res.json({ result: "user created succesfully" });
         });
