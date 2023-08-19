@@ -1,20 +1,30 @@
 const Expense = require("../models/expense");
 const User = require("../models/user");
+const sequelize = require("../utils/database");
 module.exports.postExpense = async (req, res) => {
+  const trans = await sequelize.transaction();
   try {
-    let response = await Expense.create({
-      name: req.body.name,
-      amount: req.body.amount,
-      type: req.body.type,
-      userId: req.user.id,
-    });
+    let response = await Expense.create(
+      {
+        name: req.body.name,
+        amount: req.body.amount,
+        type: req.body.type,
+        userId: req.user.id,
+      },
+      { transaction: trans }
+    );
+
     let amount = req.body.amount - 0;
     amount = amount + req.user.totalExpense;
 
-    User.update({ totalExpense: amount }, { where: { id: req.user.id } });
-
+    await User.update(
+      { totalExpense: amount },
+      { where: { id: req.user.id }, transaction: trans }
+    );
+    await trans.commit();
     res.json({ response });
   } catch (err) {
+    await trans.rollback();
     res.status(500).json({ success: false, err });
   }
 };
@@ -32,6 +42,7 @@ module.exports.getExpense = async (req, res) => {
 
 module.exports.deleteExpense = async (req, res) => {
   {
+    const trans = await sequelize.transaction();
     let amount;
     try {
       let result = await Expense.findAll({
@@ -41,14 +52,19 @@ module.exports.deleteExpense = async (req, res) => {
 
       let response = await Expense.destroy({
         where: { id: req.params.expenseId, userId: req.user.id },
+        transaction: trans,
       });
 
       amount = req.user.totalExpense - amount;
 
-      User.update({ totalExpense: amount }, { where: { id: req.user.id } });
-
+      await User.update(
+        { totalExpense: amount },
+        { where: { id: req.user.id }, transaction: trans }
+      );
+      await trans.commit();
       res.status(200).json({ success: true });
     } catch (err) {
+      await trans.rollback();
       console.log(err);
       res.status(500).json({ success: false, err });
     }
