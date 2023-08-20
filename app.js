@@ -31,7 +31,6 @@ app.use(premiumroutes);
 app.post("/password/forgotpassword", async (req, res) => {
   let email = req.body.email;
   const user = await User.findOne({ where: { email } });
-  // let code = Math.ceil(Math.random() * 1000000);
   if (user) {
     const id = uuid.v4();
     PasswordRequest.create({ id, isActive: true, userId: user.id });

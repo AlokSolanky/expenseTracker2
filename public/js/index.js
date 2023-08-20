@@ -49,7 +49,7 @@ window.onload = () => {
         if (postResponse.data.success) {
           const button = document.getElementById("premium");
           button.style.display = "none";
-          const div = document.getElementById("premiumTrue");
+          const div = document.getElementById("premium_nav");
           div.style.display = "block";
           div.style.fontFamily = "verdana";
         }
@@ -65,11 +65,11 @@ window.onload = () => {
     });
   });
   document
-    .getElementById("premiumTrue")
+    .getElementById("leaderboard")
     .addEventListener("click", async (e) => {
       const leaderBoard = document.getElementById("leaderboardArea");
-      leaderBoard.style.display = "block";
-      document.getElementById("premiumTrue").disabled = true;
+      // leaderBoard.style.display = "block";
+      document.getElementById("leaderboard").disabled = true;
       let response = await axios.get(
         "http://localhost:4000/premium/leaderBoard"
       );
@@ -103,7 +103,7 @@ function fetchAll() {
       if (response.data.premium) {
         const button = document.getElementById("premium");
         button.style.display = "none";
-        const div = document.getElementById("premiumTrue");
+        const div = document.getElementById("premium_nav");
         div.style.display = "block";
         div.style.fontFamily = "verdana";
       }
@@ -111,7 +111,7 @@ function fetchAll() {
         createLi(response.data.response[i]);
       }
     })
-    .catch((error) => console.error(error));
+    .catch((error) => console.log(error));
 }
 
 function deleteLi(id, e) {
