@@ -3,6 +3,8 @@ const cors = require("cors");
 const bodyParser = require("body-parser");
 const Sequelize = require(`sequelize`);
 const Razorpay = require("razorpay");
+const Sib = require("sib-api-v3-sdk");
+require("dotenv").config();
 
 const sequelize = require("./utils/database");
 const User = require("./models/user");
@@ -21,6 +23,38 @@ app.use(bodyParser.json());
 app.use("/user", userRoutes);
 app.use("/api/expense", expenseRoutes);
 app.use(premiumroutes);
+
+app.post("/password/forgotpassword", async (req, res) => {
+  let mail = req.body.email;
+  let code = Math.ceil(Math.random() * 1000000);
+  const client = Sib.ApiClient.instance;
+  const apiKey = client.authentications["api-key"];
+  apiKey.apiKey = process.env.API_KEY;
+
+  const tranEmailApi = new Sib.TransactionalEmailsApi();
+  const sender = {
+    email: "pbadgly@gmail.com",
+  };
+  const recievers = [
+    {
+      email: mail,
+    },
+  ];
+  tranEmailApi
+    .sendTransacEmail({
+      sender,
+      to: recievers,
+      subject: "Verification Code",
+      textContent: `This is 6 digit otp for password reset : ${code}`,
+    })
+    .then(() => {
+      console.log("succeed");
+      res.status(200).json({ success: true });
+    })
+    .catch((err) => {
+      res.status(500).json({ success: false });
+    });
+});
 
 User.hasMany(Expense);
 Expense.belongsTo(User);
