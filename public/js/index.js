@@ -1,4 +1,12 @@
-function listProduct(productsData) {
+function listProduct(isPremium, productsData) {
+  if (isPremium) {
+    const button = document.getElementById("premium");
+    button.style.display = "none";
+    const div = document.getElementById("premium_nav");
+    div.style.display = "block";
+    div.style.fontFamily = "verdana";
+  }
+  document.querySelector(".li_container").innerHTML = "";
   productsData.forEach((el) => {
     createLi(el);
   });
@@ -23,6 +31,7 @@ function showPagination({
   }
   const btn1 = document.createElement("button");
   btn1.innerHTML = `<h3>${currentPage}</h3>`;
+  btn1.setAttribute("class", "active");
   btn1.addEventListener("click", () => {
     getProducts(currentPage);
   });
@@ -30,8 +39,8 @@ function showPagination({
 
   if (hasNextPage) {
     const btn3 = document.createElement("button");
-    btn1.innerHTML = nextPage;
-    btn1.addEventListener("click", () => {
+    btn3.innerHTML = nextPage;
+    btn3.addEventListener("click", () => {
       getProducts(nextPage);
     });
     pagination.appendChild(btn3);
@@ -40,22 +49,36 @@ function showPagination({
 
 function getProducts(page) {
   axios
-    .get(`http://localhost:4000/api/expense?page=${page}`)
-    .then(({ data: { products, ...pageData } }) => {
-      listProduct(products);
+    .get(`http://localhost:4000/api/expense?page=${page}`, {
+      headers: { Authorization: localStorage.getItem("token") },
+    })
+    .then(({ data: { success, isPremium, products, ...pageData } }) => {
+      listProduct(isPremium, products);
       showPagination(pageData);
     });
 }
-window.onload = async () => {
+document.addEventListener("DOMContentLoaded", async () => {
+  document.getElementById("size").addEventListener("click", (e) => {
+    const page_size = document.getElementById("page_size").value - 0;
+    if (page_size % 5 === 0) {
+      localStorage.setItem("page_size", page_size);
+    } else {
+      alert("select a value");
+    }
+  });
+
   // fetchAll();
   const page = 1;
 
   axios
     .get(`http://localhost:4000/api/expense?page=${page}`, {
-      headers: { Authorization: localStorage.getItem("token") },
+      headers: {
+        Authorization: localStorage.getItem("token"),
+        page_size: localStorage.getItem("page_size"),
+      },
     })
-    .then(({ data: { products, ...pageData } }) => {
-      listProduct(products);
+    .then(({ data: { success, isPremium, products, ...pageData } }) => {
+      listProduct(isPremium, products);
       showPagination(pageData);
     })
     .catch((err) => {
@@ -168,7 +191,7 @@ window.onload = async () => {
       console.log(error);
     }
   });
-};
+});
 function fetchAll() {
   const token = localStorage.getItem("token");
   axios
@@ -176,7 +199,6 @@ function fetchAll() {
       headers: { Authorization: token },
     })
     .then((response) => {
-      //   console.log(response.data.response);
       if (response.data.premium) {
         const button = document.getElementById("premium");
         button.style.display = "none";

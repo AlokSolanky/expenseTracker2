@@ -40,26 +40,34 @@ module.exports.getExpense = async (req, res) => {
   //   res.json({ response, premium: req.user.isPremium });
   // } catch (err) {
   //   res.status(500).json({ success: false, err });
+
   // }
-  const page = req.query.page || 1;
+  const page_size = req.header("page_size") - 0;
+  let page = req.query.page || 1;
+  page = page - 0;
   let totalItems;
-  Expense.count()
+  Expense.count({ where: { userId: req.user.id } })
     .then((total) => {
       totalItems = total;
-      return Expense.findAll({
-        offset: (page - 1) * 10,
-        limit: 10,
-      });
+      return Expense.findAll(
+        { where: { userId: req.user.id } },
+        {
+          offset: (page - 1) * page_size,
+          limit: page_size,
+        }
+      );
     })
     .then((products) => {
       res.json({
+        success: true,
+        isPremium: req.user.isPremium,
         products: products,
         currentPage: page,
-        hasNextPage: 10 * page < totalItems,
+        hasNextPage: page_size * page < totalItems,
         nextPage: page + 1,
         hasPreviousPage: page > 1,
         previousPage: page - 1,
-        lastPage: Math.ceil(totalItems / 10),
+        lastPage: Math.ceil(totalItems / page_size),
       });
     });
 };

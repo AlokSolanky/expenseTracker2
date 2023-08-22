@@ -61,6 +61,24 @@
       .leaderBoardItems > div {
         margin: 0px 10px 0px 10px;
       }
+      .active {
+        box-sizing: border-box;
+        color: grey;
+        box-shadow: 0px 5px 4px rgb(170, 170, 170);
+      }
+      #pagination > button {
+        margin-left: 10px;
+        margin-right: 10px;
+        height: min-content;
+        border-radius: 100%;
+      }
+      #page_size {
+        padding: 8px;
+        border: 1px solid #198754;
+        color: #198754;
+        background-color: #fff;
+        box-shadow: none;
+      }
     </style>
   </head>
   <body>
@@ -70,13 +88,14 @@
         style="
           display: flex;
           flex-direction: row;
-          justify-content: space-between;
+          justify-content: space-around;
         "
       >
         <a class="navbar-brand" href="#"><h3>Expensy</h3></a>
         <button class="btn btn-outline-success" id="premium" type="submit">
           Buy Premium
         </button>
+
         <div
           id="premium_nav"
           style="display: flex; flex-direction: row; display: none"
@@ -85,6 +104,18 @@
             LeaderBoard
           </button>
           <a class="btn btn-outline-success" id="report">Report</a>
+        </div>
+        <div style="padding: 5px; background-color: white">
+          <select
+            class="form-select-sm border-success"
+            id="page_size"
+            title="select this to change page size"
+          >
+            <option selected value="5">5</option>
+            <option value="10">10</option>
+            <option value="50">50</option>
+          </select>
+          <button class="btn btn-outline-success" id="size">👍</button>
         </div>
       </div>
     </nav>
