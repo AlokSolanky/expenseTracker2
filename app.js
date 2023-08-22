@@ -3,9 +3,11 @@ const cors = require("cors");
 const bodyParser = require("body-parser");
 const Sequelize = require(`sequelize`);
 const Razorpay = require("razorpay");
+const helmet = require("helmet");
+const morgan = require("morgan");
+const fs = require("fs");
 
 const path = require("path");
-require("dotenv").config();
 const bcrypt = require("bcrypt");
 
 const sequelize = require("./utils/database");
@@ -22,6 +24,13 @@ const passwordRoutes = require("./routes/password");
 
 const app = express();
 
+const accessLogStream = fs.createWriteStream(
+  path.join(__dirname, "access.log"),
+  { flags: "a" }
+);
+
+app.use(helmet());
+app.use(morgan("combined", { stream: accessLogStream }));
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -47,7 +56,8 @@ sequelize
   .sync()
   .then(() => {
     console.log("Database Connected...");
-    app.listen(4000, () => {
+    const port = process.env.PORT || 4000;
+    app.listen(port, () => {
       console.log(`Server start on port 4000`);
     });
   })

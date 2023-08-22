@@ -45,17 +45,16 @@ module.exports.getExpense = async (req, res) => {
   const page_size = req.header("page_size") - 0;
   let page = req.query.page || 1;
   page = page - 0;
+
   let totalItems;
   Expense.count({ where: { userId: req.user.id } })
     .then((total) => {
       totalItems = total;
-      return Expense.findAll(
-        { where: { userId: req.user.id } },
-        {
-          offset: (page - 1) * page_size,
-          limit: page_size,
-        }
-      );
+      return Expense.findAll({
+        where: { userId: req.user.id },
+        offset: (page - 1) * page_size,
+        limit: page_size,
+      });
     })
     .then((products) => {
       res.json({
@@ -104,9 +103,9 @@ module.exports.deleteExpense = async (req, res) => {
 };
 
 async function uploadToS3(data, fileName) {
-  const BUCKET_NAME = "";
-  const USER_KEY = "";
-  const USER_SECRET = "";
+  const BUCKET_NAME = process.env.BUCKET_NAME;
+  const USER_KEY = process.env.USER_KEY;
+  const USER_SECRET = process.env.USER_SECRET;
 
   let s3Bucket = new AWS.S3({
     accessKeyId: USER_KEY,

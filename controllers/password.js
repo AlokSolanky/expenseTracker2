@@ -14,8 +14,7 @@ module.exports.sendEmail = async (req, res) => {
     PasswordRequest.create({ id, isActive: true, userId: user.id });
     const client = Sib.ApiClient.instance;
     const apiKey = client.authentications["api-key"];
-    apiKey.apiKey =
-      "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";
+    apiKey.apiKey = process.env.SIB_KEY;
 
     const tranEmailApi = new Sib.TransactionalEmailsApi();
     const sender = {

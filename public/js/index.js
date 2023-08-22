@@ -50,7 +50,10 @@ function showPagination({
 function getProducts(page) {
   axios
     .get(`http://localhost:4000/api/expense?page=${page}`, {
-      headers: { Authorization: localStorage.getItem("token") },
+      headers: {
+        Authorization: localStorage.getItem("token"),
+        page_size: localStorage.getItem("page_size"),
+      },
     })
     .then(({ data: { success, isPremium, products, ...pageData } }) => {
       listProduct(isPremium, products);

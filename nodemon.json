@@ -1,0 +1,10 @@
+{
+    "env": {
+        "JWT_TOKEN":"ljalgmklgjal20359ijfljo209jlkjalkvjaijsaoijwg",
+        "PORT":4000,
+        "BUCKET_NAME":"",
+        "USER_KEY":"",
+        "SECRET_KEY":"",
+        "SIB_KEY":"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"
+    }
+}
