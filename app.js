@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require("cors");
+require("dotenv").config();
 const bodyParser = require("body-parser");
 const Sequelize = require(`sequelize`);
 const Razorpay = require("razorpay");
