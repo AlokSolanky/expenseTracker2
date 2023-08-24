@@ -14,7 +14,8 @@ module.exports.sendEmail = async (req, res) => {
     PasswordRequest.create({ id, isActive: true, userId: user.id });
     const client = Sib.ApiClient.instance;
     const apiKey = client.authentications["api-key"];
-    apiKey.apiKey = process.env.SIB_KEY;
+    apiKey.apiKey =
+      "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";
 
     const tranEmailApi = new Sib.TransactionalEmailsApi();
     const sender = {
@@ -51,11 +52,11 @@ module.exports.showResetForm = async (req, res) => {
   console.log(id);
   PasswordRequest.findOne({ where: { id } })
     .then((forgotpasswordrequest) => {
-      if (forgotpasswordrequest.isActive) {
-        forgotpasswordrequest.update({ isActive: false });
+      if (forgotpasswordrequest) {
         res.sendFile(
-          path.join(__dirname, "..", "public", "resetPassword.html")
+          path.join(__dirname, "..", "..", "frontend", "resetPassword.html")
         );
+        forgotpasswordrequest.update({ isActive: false });
       } else {
         res.status(401).json({ success: false, msg: "No reset request found" });
       }
