@@ -6,7 +6,7 @@ const sequelize = new Sequelize(
   {
     dialect: `mysql`,
     // host: process.env.DB_HOST,
-    host: "localhost",
+    host: DB_HOST,
   }
 );
 module.exports = sequelize;
